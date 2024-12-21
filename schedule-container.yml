@@ -1,0 +1,20 @@
+# trigger pipeline to start at 10pm each night
+schedules:
+- cron: "0 22 * * *"
+  displayName: Daily 10pm build
+  branches:
+    include:
+    - master
+  always: true
+
+jobs:
+- job: RunAzCliContainer
+  displayName: 'Run Azure CLI copy command in a container'
+  steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'Azure Pipelines Service Connection'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az container start --name mycontainer --resource-group myresourcegroup  
